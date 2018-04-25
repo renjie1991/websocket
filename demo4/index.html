@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Websocket</title>
+</head>
+
+<body>
+    <h1>Chat Room</h1>
+    <input type="text" id="sendTxt">
+    <button id="sendBtn">发送</button>
+    <script>
+        function showMessage(msg) {
+            var str = msg.data,
+                type = msg.type;
+            var div = document.createElement('div');
+            div.innerHTML = str;
+            var colorList = {
+                enter: 'blue',
+                leave: 'red',
+                message: 'black'
+            }
+            div.style.color = colorList[type]
+            document.body.appendChild(div);
+        }
+
+        var websocket = new WebSocket("ws://localhost:3000/");
+        websocket.onopen = function () {
+            console.log('websocket open');
+            document.getElementById('sendBtn').onclick = function () {
+                var txt = document.getElementById('sendTxt').value;
+                if (txt) websocket.send(txt);
+            }
+        }
+        websocket.onclose = function () {
+            console.log('websocket close');
+        }
+        websocket.onmessage = function (e) {
+            console.log('client onmessage:'+e.data);
+            if(!e.data) return false;
+            var msg = JSON.parse(e.data)
+            showMessage(msg);
+        }
+
+    </script>
+</body>
+
+</html>

@@ -27,24 +27,23 @@
             document.body.appendChild(div);
         }
 
-        var websocket = new WebSocket("ws://localhost:3000/");
-        websocket.onopen = function () {
+        var websocket = new WebSocket(`ws://${location.host}:8080/`);
+        websocket.onopen = function() {
             console.log('websocket open');
-            document.getElementById('sendBtn').onclick = function () {
+            document.getElementById('sendBtn').onclick = function() {
                 var txt = document.getElementById('sendTxt').value;
                 if (txt) websocket.send(txt);
             }
         }
-        websocket.onclose = function () {
+        websocket.onclose = function() {
             console.log('websocket close');
         }
-        websocket.onmessage = function (e) {
-            console.log('client onmessage:'+e.data);
-            if(!e.data) return false;
+        websocket.onmessage = function(e) {
+            console.log('client onmessage:' + e.data);
+            if (!e.data) return false;
             var msg = JSON.parse(e.data)
             showMessage(msg);
         }
-
     </script>
 </body>
 
